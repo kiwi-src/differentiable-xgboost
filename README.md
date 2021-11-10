@@ -9,12 +9,12 @@ To start training the differentiable XGBoost model, you need to execute the foll
 python run_differentiable_xgboost.py
 ```
 
-## Model architecture
+## Key Concepts
 
-## Binary Tree
+### Binary Tree
 The XGBoost algorithm is based on binary splits. The model that is implemented in this project has to mimick this behavior. The operations are decribed below.
 
-### Level 0
+#### Level 0
 <img src="images/level0.png">
 Node level 0
 
@@ -38,8 +38,9 @@ Nodes level 1
 ]
 ```
 
-### Level 1
+#### Level 1
 <img src="images/level1.png">
+
 Before the next split the node values `a` are flattened.
 
 Nodes level 1
@@ -76,7 +77,7 @@ One way to implement it in TensorFlow is using Einsum
 tf.einsum('bi,bij->bij')
 ```
 
-### Level 2
+#### Level 2
 Nodes level 1
 ``` Python
 [
@@ -107,7 +108,7 @@ Nodes level 2
 ]
 ```
 
-### Leaves Weights
+#### Leaves Weights
 
 Lets assume the tree has a depth of `2` then there are `4` leaf nodes. 
 ``` Python
@@ -148,7 +149,7 @@ only `l[0]` is `1`:
 ```
 
 
-## Search Best Feature and Threshold
+### Search Best Feature and Threshold
 The XGBoost algorithm uses a for loop to find the best feature with the best threshold. For prediction the optimal threshold is then compared with the feature value. These operations also have to be implemented by the differentiable XGBoost model.
 
 1. Select a feature (Example with two features)
@@ -165,7 +166,7 @@ selected_feature = [[-0.998 * 0.08 + (-0.9995) * 0.92]] = [[-0.99938]]
 selected_feature = [[-0.99938]]
 sigmoid(temperature) = [1.0]
 threshold = [0.0]
-decisions = sigmoid(([[-0.99938]] + [0.0]) / [1.0] # This is the matrix d
+decisions = sigmoid(([[-0.99938]] + [0.0]) / [1.0]
 ```
 
 ## Results
@@ -178,5 +179,5 @@ The performance of the model compared to other baseline models can be found [her
 | [Deep Neural Decision Forests](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Kontschieder_Deep_Neural_Decision_ICCV_2015_paper.pdf) | 2015 |Probabilistic routing, i.e. no feature selection and no thresholds
 | [Neural Decision Trees](https://arxiv.org/pdf/1702.07360.pdf) | 2017 | -
 | [Deep Neural Decision Trees](https://arxiv.org/abs/1806.06988)| 2018 | None binary splits; each feature has its own neural network
-| [Neural Oblivious Decision Ensembles for Deep Learning on Tabular Data](https://arxiv.org/abs/1909.06312) | 2019| Different initialization; left and right child nodes use same parameters; sigmoid function is not applied on temperature
+| [Neural Oblivious Decision Ensembles for Deep Learning on Tabular Data](https://arxiv.org/abs/1909.06312) | 2019|Different initialization; left and right child nodes use same parameters; sigmoid function is not applied on temperature
 
